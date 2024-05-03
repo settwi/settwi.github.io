@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>setterberg.Coplanar waveguides with shielding vias</title>
+  <meta charset="utf-8" />
+  <meta name="generator" content="Pelican" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="/theme/base.css">
+  <link rel="icon" type="image/png" sizes="192x192" href="/theme/favicon/android-chrome-192x192.png">
+  <link rel="manifest" href="/theme/william.webmanifest">
+
+
+
+
+
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+  <header>
+    <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">
+      <a id="home-but" class="navbar-brand" href="/index.html">WS</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+        aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <u><a target="" class="nav-link" href="/pages/cv-resume.html">cv + resume</a></u>
+          </li>
+          <li class="nav-item">
+            <u><a target="" class="nav-link" href="/blog.html">personal</a></u>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <main role="main" class="container mb-2">
+    <div class="m2">
+  <header>
+    <h1 class="entry-title">
+      <a href="/drafts/coplanar-waveguides-with-vias.html" rel="bookmark"
+         title="Permalink to Coplanar waveguides with shielding vias">Coplanar waveguides with shielding vias</a></h1>
+ 
+  </header>
+  <footer class="post-info">
+    <time class="published" datetime="2024-04-27T11:00:00-05:00">
+      Published: Sat 27 April 2024
+    </time>
+    <address class="vcard author">
+      By           <a class="url fn" href="/author/william-setterberg.html">William Setterberg</a>
+    </address>
+  </footer><!-- /.post-info -->
+  <article>
+    <h2>Intro</h2>
+<h3>If you want to get equations for impedance, skip ahead to the <a href="#impedance-equations">impedance equations</a>.</h3>
+<h3>A Python script for computing impedances given different geometries can be found at <a href="">this GitHub gist</a>.</h3>
+<p><strong>Why you should care:</strong> stitching vias impose Dirichlet boundary conditions on the electric fields of electromagnetic waves traveling through the coplanar waveguide so you can't just ignore them!</p>
+<p>Here we report some equations which can be used to compute the characteristic impedance of coplanar
+    waveguides (CPW) with vias stitched around them.
+Different people use different terms to refer to these things;
+    I'm gonna call them "stitched CPWs" or SCPW.
+I haven't found a post online that communicates these effectively;
+    most just say "use a full-wave simulation to figure it out."
+The impedance seems pretty elementary to compute using (for example)
+    <a href="https://doi.org/10.1080/00207219008921226">quasistatic conformal mapping techniques</a>.</p>
+<p><img src="/drafts/static/images/shielded-cpw.svg" alt="shielded-cpw" width="80%"/></p>
+<p><em>Coplanar waveguide with vias stitched around it. Stolen from <a href="https://altair.com/">Altair Engineering docs</a>.</em></p>
+<p>Anyway--there <strong>are</strong> closed form expressions to compute the impedance of such a waveguide,
+    taking into account the effect of the boundary conditions imposed by the stitching vias.
+So we'll report those here and give an example application.</p>
+<p>I am ripping most of this content from Chapter 3 of a very nice book
+    by Rainee Simons,
+    <em><a href="https://onlinelibrary.wiley.com/doi/book/10.1002/0471224758">Coplanar Waveguide Circuits, Components, and Systems</a></em>.
+If you are curious about things like the effect of finite conductivity or finite conductor thickness,
+    which you ought to be if you're here,
+    I suggest getting the book and perusing Chapter 3.</p>
+<h2>Why can't I find these damn equations anywhere?!?</h2>
+<p>Across the internet there seems to be a consensus that,</p>
+<ul>
+<li>Coplanar waveguides are <a href="https://www.microwavejournal.com/blogs/1-rog-blog/post/24374-comparing-microstrip-and-grounded-coplanar-waveguide#understanding-coplanar-waveguide-with-ground">superior to microstriplines at high-frequency</a>,
+    but <a href="https://ieeexplore.ieee.org/document/6101804">can excite parallel-plate modes without via stitching around them</a></li>
+<li>There <a href="https://resources.altium.com/p/coplanar-waveguide-with-ground">are not closed-form expressions</a>
+    for computing the characteristic impedance
+    of coplanar waveguides with "via stitching" surrounding them.</li>
+</ul>
+<p>As I alluded to in the intro, <strong>there are closed forms!</strong>
+They do not apply in all geometries as mentioned in other blog posts.
+However, for many geometries they are useful.
+The equations presented here are good (&lt;2% deviation) approximations
+    of quasistatic solutions to Laplace's equation.</p>
+<p>Of course,
+    for the most accurate results,
+    using a full-wave simulation is the way to go.
+However for prototyping on a budget,
+    or for designs which aren't as sensitive,
+    the closed-form expressions here can be of use.</p>
+<h2>Idealized problem: conducting walls instead of vias</h2>
+<h3>Overview</h3>
+<p>In Chapter 3 of Simmons's book,
+    equations are presented for an approximate form of the stitched CPW,
+    that where the ground plane below the waveguide strip
+    is connected to semi-infinite conducting lateral walls.</p>
+<p><strong>IMPORTANT:</strong> The spacing <span class="math">\(g\)</span> is assumed to be <span class="math">\(g = S/2 + W\)</span>.
+This is a limitation of the model but we get nice closed-form expressions.
+Also note that if your waveguide is shaped with a "bad" aspect ratio
+    and your stripline-to-ground plane spacing is too small,
+    the dielectric-filled rectangular modes may be excited.
+See <a href="https://www.wiley.com/en-us/Microwave+Engineering,+4th+Edition-p-9780470631553"><em>Microwave Engineering</em>, (Pozar 2012)</a> for equations.</p>
+<p><img src="/drafts/static/images/semi-inf-cpw.png" alt="semi-infinite walls" width="80%"/></p>
+<p><em>Semi-infinite conducting lateral walls around a conductor-backed coplanar waveguide.</em>
+<em>Stolen from Simmons.</em></p>
+<p>We can fabricate a structure like the one above using closely-stitched vias, say <span class="math">\(d &lt; \lambda / 10\)</span>
+    for the wavelength of interest.</p>
+<h3 id="impedance-equations">Impedance equations</h3>
+<h4><em>A note on the quasistatic approximation</em></h4>
+<p><em>In this case typical dimensions <span class="math">\(L\)</span> are 1mm and typical timescales <span class="math">\(\tau\)</span> are 1ns to 50ps.</em>
+<em>The quasistatic approximation is valid when <span class="math">\(L / \tau \ll v_g\)</span> i.e. the wave group velocity.</em>
+<em>For TEM and quasi-TEM modes the group velocity is just <span class="math">\(v_g = c \cdot \varepsilon_r^{-1/2}\)</span>.</em>
+<em>For FR-4 <span class="math">\(\varepsilon_r \sim 4\)</span> and so we must satisfy</em>
+</p>
+<div class="math">$$ \frac{L}{\tau} = [10^6, 10^7]\text{ m/s} &lt;&lt; v_g = 2\times10^8\text{ m/s}$$</div>
+<p><em><strong>So for signals of frequency 1 GHz the quasistatic approximation is definitely valid.
+At 20 GHz (i.e. <span class="math">\(\tau = 50 ps\)</span>) there may be significant deviations.</strong></em></p>
+<h4>Results collected from Simmons</h4>
+<p>These are a mouthful but are adapted by Simmons from <a href="https://ieeexplore.ieee.org/document/1131631">Rowe &amp; Lao 1983</a> and
+    other publications mentioned in the textbook.
+Empirical expressions are derived from their quasistatic solutions to Laplace's equation.</p>
+<p><strong>The characteristic impedance <span class="math">\(Z_0\)</span></strong> of the above waveguide is
+</p>
+<div class="math">$$ \frac{1}{Z_0} = 
+    \frac{5q}{1 + 5q} \cdot \frac{1}{Z_m} +
+    \frac{1}{1 + q} \cdot \frac{1}{Z_c},
+$$</div>
+<p>where</p>
+<div class="math">$$ q =
+    \frac{S}{h}
+    \left( \frac{S + 2W}{S} - 1\right)
+    \left( 3.6 - 2 \exp\left[-\frac{\varepsilon_r + 1}{4}\right]
+    \right).
+$$</div>
+<p>We may use approximations for the terms <span class="math">\(Z_m\)</span> and <span class="math">\(Z_c\)</span>, correct to within 2% of the exact solutions.</p>
+<p>For <span class="math">\(S/h \le 1\)</span> we have: </p>
+<div class="math">$$ Z_m = \frac{\eta}{2 \pi \sqrt{\varepsilon_\text{effm}}} \ln \left[\frac{8h}{S} + \frac{S}{4h} \right].$$</div>
+<p>Then for for <span class="math">\(S/h \ge 1\)</span>:
+</p>
+<div class="math">$$ Z_m =
+    \frac{\eta}{\sqrt{\varepsilon_\text{effm}}}\left(
+        \frac{S}{h} + 1.393 + 0.667 \ln\left[\frac{S}{h} + 1.444\right]
+    \right)^{-1}
+$$</div>
+<p>Above <span class="math">\(\eta = 377 \Omega\)</span> is the impedance of free space, and the effective <em>m</em> dielectric constant is:
+</p>
+<div class="math">$$
+\varepsilon_\text{effm} =
+    \frac{\varepsilon_r + 1}{2} + \frac{\varepsilon_r - 1}{2} \left(1 + \frac{10h}{S}\right)^{-1/2}.
+$$</div>
+<p>The <span class="math">\(Z_c\)</span> term has similar approximations:</p>
+<div class="math">$$ Z_c = \frac{30 \pi}{\sqrt{\varepsilon_\text{effc}}} \frac{K\left(\sqrt{1 - k^2}\right)}{K(k)}. $$</div>
+<p>In this expression the <span class="math">\(K\)</span> function is the
+    <a href="https://mathworld.wolfram.com/CompleteEllipticIntegraloftheFirstKind.html">complete elliptic integral of the first kind</a>,
+    and <span class="math">\(k\)</span> and <span class="math">\(\varepsilon_\text{effc}\)</span> are defined as follows:
+</p>
+<div class="math">$$ k = \frac{S}{S + 2W} $$</div>
+<div class="math">$$
+\varepsilon_\text{effc} = 
+    \frac{\varepsilon_r + 1}{2} \varepsilon^\star
+$$</div>
+<div class="math">$$
+\varepsilon^\star = 
+    \tan\left[0.775\ln\frac{h}{W} + 1.75\right] + 
+    \frac{kW}{h}\left\{
+        0.04 - 0.7k + (1 - \varepsilon_r/10)(1 + 4k) / 400
+    \right\}
+$$</div>
+<p>Those are the equations you need to compute the impedances.
+There are other cases considered in Simmons chapter 3,
+    such as the effect of conductors of finite size,
+    lossy dielectrics,
+    and modified geometries.</p>
+<p>A calculator for various geometries with variables you can modify is given in <a href="">this GitHub gist</a>.</p>
+<h2>Example application: multi-SiPM readout for scintillation detectors</h2>
+<h3>Setup</h3>
+<p>We are using <a href="https://en.wikipedia.org/wiki/Silicon_photomultiplier">silicon photomultipliers (SiPMs)</a>
+    to read out scintillation photons in an X-ray detector.
+The typical rise times of our signals are ~1ns to ~100ns,
+    so RF techniques apply.
+Each scintillation crystal couples to six SiPM and we read them out as a combined unit.</p>
+<p>After pre-amplifying the SiPM pulses immediately at the output using a
+    <a href="https://en.wikipedia.org/wiki/Transimpedance_amplifier">"transimpedance amplifier"</a>
+    (current to voltage converter),
+    we need to sum the voltages into a single signal.</p>
+<p>These pulses have frequency components at least in the ~100MHz to 1 GHz regime.
+Due to physical constraints of the crystal the propagation length along the PCB is on the order of
+    <span class="math">\(\lambda / 10\)</span> for the fastest components.
+So we need to use waveguides to move the electromagnetic energy.
+We also want:</p>
+<ul>
+<li>Low energy loss due to spurious mode excitation</li>
+<li>Ease of manufacturing</li>
+<li>Small form factor</li>
+<li>Good isolation between physical channels, which can be some millimeters apart</li>
+</ul>
+<p><img src="/drafts/static/images/rf-layout-example-crop.png" alt="layout example" width="80%"/></p>
+<p><em>Example layout of <strong>unshielded</strong> CPW on a prototype SiPM readout PCB.</em>
+<em>The spacing between readout channels is approaching <span class="math">\(\lambda / 10\)</span> for <span class="math">\(\tau = 1\text{ns}\)</span>.</em></p>
+<p>Stitched coplanar waveguides fit the bill here.
+We can use the calculator given in the gist to figure out what we need.</p>
+<h3>How to compute an impedance</h3>
+<p>We want a characteristic impedance <span class="math">\(Z_0 = 50\ \Omega\)</span>.
+Let's set the microstrip-to-ground plane spacing 
+    <span class="math">\(h = 0.994\)</span>mm and the dielectric constant
+    <span class="math">\(\varepsilon_r = 4.1\)</span>.
+These values happen to line up with a controlled impedance setup on
+    <a href="https://jlcpcb.com/impedance">JLC PCB</a>.
+The equations form a nonlinear system,
+    subject to the constraint <span class="math">\(g = S/2 + W\)</span>,
+    where <span class="math">\(g\)</span> is the via wall-to-microstrip center distance as defined in the above figure.</p>
+<p>We can easily use numerics to solve the equation for <span class="math">\(S\)</span> given a <span class="math">\(W\)</span>,
+    or <span class="math">\(W\)</span> given an <span class="math">\(S\)</span>.
+For this computation let's take <span class="math">\(W = 0.2\)</span>mm and go from there.
+Using the gist calculator, we find:
+- $S = $mm
+- $g = $mm, i.e. the spacing of vias from microstrip center.</p>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
+  </article>
+    </div>
+  </main>
+
+  <footer class="ml-2 mr-2 mb-2 mt-auto">
+    <div class="container">
+      <div class="row mb-1">
+        <u>click these buttons:</u>
+      </div>
+      <div class="row">
+        <a href="https://github.com/settwi" target="_blank">
+          <img src="/theme/images/github.svg" alt="github" class="social">
+        </a>
+        <a href="https://www.linkedin.com/in/wsetterb" target="_blank">
+          <img src="/theme/images/linkedin.png" alt="linkedin" class="social">
+        </a>
+        <a href="https://orcid.org/0000-0003-2165-8314" target="_blank">
+          <img src="/theme/images/orc.svg" alt="orcid" class="social">
+        </a>
+      </div>
+      <div class="row mt-3">
+        <span class="text-muted">
+          website content licenced under <a target="_blank"
+            href="https://creativecommons.org/publicdomain/zero/1.0/">CC0 1.0 Universal</a>
+        </span>
+      </div>
+      <div class="row mt-1">
+        <span class="text-muted">
+          built using <a target="_blank" href="https://getpelican.com/">Pelican</a>.
+          hosted with ♥️ on <a target="_blank" href="https://github.com/settwi/settwi.github.io">GitHub Pages</a>.
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap required JS -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>

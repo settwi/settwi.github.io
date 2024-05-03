@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>setterberg.How much power does a WiFi router deliver to a human body?</title>
+  <meta charset="utf-8" />
+  <meta name="generator" content="Pelican" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="/theme/base.css">
+  <link rel="icon" type="image/png" sizes="192x192" href="/theme/favicon/android-chrome-192x192.png">
+  <link rel="manifest" href="/theme/william.webmanifest">
+
+
+
+
+
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+  <header>
+    <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">
+      <a id="home-but" class="navbar-brand" href="/index.html">WS</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+        aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <u><a target="" class="nav-link" href="/pages/cv-resume.html">cv + resume</a></u>
+          </li>
+          <li class="nav-item">
+            <u><a target="" class="nav-link" href="/blog.html">personal</a></u>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <main role="main" class="container mb-2">
+    <div class="m2">
+  <header>
+    <h1 class="entry-title">
+      <a href="/wifi-microwaves-sunlight/" rel="bookmark"
+         title="Permalink to How much power does a WiFi router deliver to a human body?">How much power does a WiFi router deliver to a human body?</a></h1>
+ 
+  </header>
+  <footer class="post-info">
+    <time class="published" datetime="2024-05-03T11:00:00-05:00">
+      Published: Fri 03 May 2024
+    </time>
+    <address class="vcard author">
+      By           <a class="url fn" href="/author/william-setterberg.html">William Setterberg</a>
+    </address>
+  </footer><!-- /.post-info -->
+  <article>
+    <p>This post started out as a fun calculation to compare the power output by microwave ovens and by WiFi routers.
+That's still what it is, but it is also a nice surface-level summary of the physics of antennas, sunlight, estimation, and the FCC.
+Well, not the physics of the FCC, but I did learn why we hire professionals to read the regulations.</p>
+<p><strong>The big takeaway is that, while it takes your microwave oven only about a minute to heat up a cup of coffee, it would take your WiFi router over ten thousand years to do the same!</strong></p>
+<h2>How much energy do microwaves actually put into your food?</h2>
+<p>Microwave ovens use <a href="https://en.wikipedia.org/wiki/Cavity_magnetron">magnetrons</a> to generate microwave radiation.
+Generally they operate at ~2 GHz, the same frequency as WiFi.
+We can compute how much power gets injected into the microwave oven "cavity",
+    i.e. the part where you cook your food,
+    and from that determine the energy flux into food.
+The water molecules in the food absorb the microwaves and vibrate harder (turn the microwaves into heat).
+I'm gonna use the example of a coffee cup here because that's what I'm drinking right now.</p>
+<p><img src="/wifi-microwaves-sunlight/static/images/coffee.jpg" alt="coffee in a microwave" width="75%"/></p>
+<p><em>Yes, that's my own coffee, in my own microwave.</em></p>
+<p>The power injected into the microwave cavity is <span class="math">\(P_\text{inj} = \epsilon \cdot P_\text{in}\)</span>,
+    where <span class="math">\(\epsilon\)</span> is the efficiency of the microwave oven and varies from 0.5 to 0.9 based on Googling for efficiencies.</p>
+<p>For a typical microwave,
+    <span class="math">\(P_\text{in} = 1 \text{ kW}\)</span>.
+Assuming poor efficiency,
+    the power that gets injected into the microwave box is about 500 W.</p>
+<p>A typical microwave box is about <span class="math">\(V = 2\text{ ft}^3 = 0.06 \text{m}^3\)</span></p>
+<p>If we assume the energy is flows uniformly from the top to the bottom of the microwave,
+    (<a href="https://www.youtube.com/watch?v=qhXbAoqWCwY">which isn't a perfect assumption</a> but should be good enough,)
+    we can compute a power flux (irradiance):
+</p>
+<div class="math">$$I_\text{microwave} \approx
+P_\text{inj} \cdot V^{-2/3}
+= 3300 \text{ W/m}^2.$$</div>
+<p>
+This calculation assumes that a typical microwave is a cube which is inaccurate but the number is close enough.</p>
+<h3>How much energy goes into heating a cup of coffee?</h3>
+<p>A typical microwave (~3 kW/m<span class="math">\(^2\)</span> equivalent irradiance) can heat up a cup of coffee in about a minute. If the coffee is 8 US fl. oz. and the cup has a circular diameter of three inches, then the incident power is 
+</p>
+<div class="math">$$P_\text{inc} = \pi r_\text{cup}^2 \cdot I_\text{microwave} = 15\text{ W}$$</div>
+<p>
+Across one minute the microwave delivers a total energy of 
+</p>
+<div class="math">$$\begin{aligned}
+    E_\text{delivered} &amp;= P_\text{inc} \cdot 1\text{ minute} \\
+                       &amp;= 900\text{ J} = 220 \text{ calories}
+\end{aligned}
+$$</div>
+<p>
+Computing the same number from heat capacity, it would take about 700 J of energy to heat a coffee cup from room temperature to boiling. So this estimate is decent, within 30%.</p>
+<h4>Implication: in a minute the microwave heats up the coffee by about 200 calories. A minute in the microwave is like eating four Oreo cookies. I could go on...</h4>
+<h2>How much power does a WiFi router produce?</h2>
+<p>Now let's compute similar quantities for a WiFi router.
+Routers broadcast their energy using antennas rather than magnetrons like in microwave ovens.</p>
+<p><a href="https://www.ecfr.gov/current/title-47/section-15.209">Title 47, Chapter 1, Section 15.209</a> of the Code of Federal Regulations limits the electric field strength which may be radiated from a given non-broadcast antenna (or "<a href="https://www.ecfr.gov/current/title-47/part-15#p-15.3(o)">intentional radiator</a>" as they call it). For WiFi antennas the electric field strength may not exceed <span class="math">\(500\ \mu\mathrm{V}/\mathrm{m}\)</span> measured at a distance of 3 meters away. We need to jump through some hoops to convert that field strength into irradiance but it is straightforward if you know the right equations.</p>
+<p>There's a complication: the radiation pattern for a given antenna is not uniform. The most simple dipole antennas have a radiation pattern which is axially symmetric but varies along the other directions like a donut.</p>
+<p><img src="/wifi-microwaves-sunlight/static/images/dipole.jpg" alt="dipole radiation pattern"/></p>
+<p><em>Radiation pattern of a dipole antenna of length <span class="math">\(L = \lambda\)</span>, i.e. a single wavelength.
+WiFi antennas are generally more like <span class="math">\(L = \lambda / 10\)</span> in length so the radiation pattern is different.
+Credit: <a href="https://www.antenna-theory.com/antennas/dipole.php">antenna-theory.com</a></em></p>
+<p>For the sake of argument let's just assume that the WiFi antenna radiates isotropically with the maximum allowed electric field strength at 10 meters.
+This would not be a practical antenna design,
+    but it is a worst-case scenario which we can use to determine how much energy could be dumped into an object at the FCC limits.</p>
+<p>First we need to convert the electric field strength measured at 3 meters to a power flux.
+The energy density of an electric field can be derived by analyzing the potential energy equations for electrostatics,
+    as in <a href="https://en.wikipedia.org/wiki/Classical_Electrodynamics_(book)">Jackson</a> Chapter 1.11.
+The result is that the energy density <span class="math">\(w\)</span> is given as
+</p>
+<div class="math">$$ w = \frac{\epsilon}{2} \mathbf{E} \cdot \mathbf{E}.$$</div>
+<p>The power flux is the energy density multiplied by how fast it moves through space,
+    which is the speed of light,
+    at least in this case of an isotropic radiator.
+For air the dielectric constant <span class="math">\(\epsilon \approx \epsilon_0\)</span> and the speed of light is approximately that of vacuum.
+Thus the irradiance from a given electric field strength is
+</p>
+<div class="math">$$
+\begin{aligned}
+    I_\text{antenna} &amp;= w \cdot c \\
+                     &amp;= c \frac{\epsilon_0}{2} E^2 \\
+                     &amp;= \frac{E^2}{2 Z_0} \\
+                     &amp;= 0.33 \text{ nW/m}^2 \\
+                     &amp;= \frac{I_\text{microwave}}{10000000000000},
+\end{aligned}
+$$</div>
+<p>
+Where we have used that the speed of light
+    <span class="math">\(c = (\epsilon_0 \mu_0)^{-1/2}\)</span> and <span class="math">\(Z_0 = \sqrt{\mu_0 / \epsilon_0} \approx 377\ \Omega\)</span> is the impedance of free space.
+Already we can see that the WiFi router irradiance is very tiny compared to that of the microwave.</p>
+<p>Now we can put in some numbers.
+Standing three meters away from a typical WiFi antenna,
+    and assuming the human body has a cross section of about
+    <span class="math">\(A = 2 \times 0.6 = 1.2\)</span> m<span class="math">\(^2\)</span>,
+    the absolute maximum power a person could receive from its radiated power would be:
+</p>
+<div class="math">$$
+\begin{aligned}
+P_\text{max, human}(10\text{ meters}) &amp;= I_\text{antenna} \cdot A \\
+                                      &amp; = \frac{(500\ \mu\text{V}/\text{m})^2}{2 \cdot 377\ \Omega} \cdot 1.2\text{ m}^2\\
+&amp;= 0.4 \text{ nW (!)}
+\end{aligned}
+$$</div>
+<p>
+<strong>So standing 30ft away from a WiFi antenna you'd get hit with about a nanowatt of power.</strong>
+The power in a loud fart is more than that.</p>
+<p>Of course the power increases as you get closer,
+    inversely proportional to the distance.
+Say you are only one foot away. Then the incident power would be (noting 33 ft = 10 m):
+</p>
+<div class="math">$$
+\begin{aligned}
+P_\text{max, human}(1\text{ ft}) &amp;= P_\text{max, human}(10\text{ m}) \cdot \frac{33^2}{1^2} \\
+                                 &amp;= 400 \text{nW}
+\end{aligned}$$</div>
+<p>
+Clearly 400 nW is more than 0.4 nW.
+Still, this is a tiny, TINY amount of power.</p>
+<h3>How long would it take the WiFi router to heat a cup of coffee?</h3>
+<p>Let's do the same analysis for the coffee cup. This time assume it's side-on with a height of three inches and the same diameter of three inches. We can scale the power delivered to the human by the ratio of areas to compute this. The incident power (calculated as in the case of the human body) is 
+</p>
+<div class="math">$$\begin{aligned}
+    P_\text{max, coffee}(1\text{ ft}) &amp;= \\
+                                      &amp;= P_\text{max, human}(1\text{ ft}) \\
+                                      &amp; \quad \times \frac{\text{cross section of coffee}}{\text{cross section of a human}} \\
+                                      &amp;= 2\text{ nW}
+\end{aligned}$$</div>
+<p>
+The power delivered to the coffee cup 1 foot away from the antenna is about 2 nanowatts.</p>
+<p>From before we know it takes about four Oreo cookies (200 calories, or 900 Joules) to heat the coffee cup up in the microwave. At a power delivered of two nanowatts, this would take 
+</p>
+<div class="math">$$ t = \frac{900\text{ J}}{2\text{ nW}} = 13000\text{ years}$$</div>
+<p>
+This is neglecting the cooling of the coffee cup due to thermal conduction.
+Setting it out in the sunlight would do a better job of warming it up.</p>
+<h4>Takeaway: heating up a cup of coffee with a WiFi router would take 13,000 years assuming it doesn't conduct any heat away.</h4>
+<h2>Why does the FCC even bother regulating the power output of antennas if it's so small?</h2>
+<p>Because all radio equipment is sensitive to broadband contamination.
+The primary purpose of the regulations isn't to protect <em>people</em>,
+    although the regulations do a good job of that.
+The regulations are to protect communications equipment and keep it functioning.</p>
+<h2>How does a WiFi router compare to the power received on a sunny day?</h2>
+<p>With no cloud cover,
+    the irradiance from the sun is about 1000 W/m<span class="math">\(^2\)</span>.
+That's about one-third of the microwave irradiance,
+    <strong>but about a million billion times that of the router!</strong>
+The radiation doesn't penetrate as deeply because it is shorter wavelength.
+But, we still need to wear sunscreen because ultraviolet light is what gives you skin cancer.</p>
+<p><strong>Sunlight is many times more dangerous than radiation from WiFi routers.</strong></p>
+<p><img src="/wifi-microwaves-sunlight/static/images/sunlight-wifi.jpeg" alt="sunlight shining on wifi" style="max-width: 60%"/></p>
+<p><em>Generated using <a href="https://deepai.org/machine-learning-model/text2img">deep ai</a></em></p>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
+  </article>
+    </div>
+  </main>
+
+  <footer class="ml-2 mr-2 mb-2 mt-auto">
+    <div class="container">
+      <div class="row mb-1">
+        <u>click these buttons:</u>
+      </div>
+      <div class="row">
+        <a href="https://github.com/settwi" target="_blank">
+          <img src="/theme/images/github.svg" alt="github" class="social">
+        </a>
+        <a href="https://www.linkedin.com/in/wsetterb" target="_blank">
+          <img src="/theme/images/linkedin.png" alt="linkedin" class="social">
+        </a>
+        <a href="https://orcid.org/0000-0003-2165-8314" target="_blank">
+          <img src="/theme/images/orc.svg" alt="orcid" class="social">
+        </a>
+      </div>
+      <div class="row mt-3">
+        <span class="text-muted">
+          website content licenced under <a target="_blank"
+            href="https://creativecommons.org/publicdomain/zero/1.0/">CC0 1.0 Universal</a>
+        </span>
+      </div>
+      <div class="row mt-1">
+        <span class="text-muted">
+          built using <a target="_blank" href="https://getpelican.com/">Pelican</a>.
+          hosted with ♥️ on <a target="_blank" href="https://github.com/settwi/settwi.github.io">GitHub Pages</a>.
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap required JS -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>

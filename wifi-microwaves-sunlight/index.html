@@ -56,7 +56,39 @@
     </address>
   </footer><!-- /.post-info -->
   <article>
-    <p>This post started out as a fun calculation to compare the power output by microwave ovens and by WiFi routers.
+    <h1>Update -- what does medical science say about WiFi dosage?</h1>
+<p>This article only focuses on the total energy which may be delivered to the human body;
+    it does not address where or how that energy is deposited.
+It was brought to my attention that some studies,
+    particularly <a href="https://doi.org/10.1016/j.envres.2018.01.035">this review study</a>,
+    have sought to understand the effects of WiFi on the human body
+    especially through "non-thermal" interactions.</p>
+<p>That review makes some surprising claims which at face value seem rather important.
+The author also cites himself many times.
+And,
+    because of various flaws in the review,
+    a peer of his <a href="https://doi.org/10.1016/j.envres.2018.07.026">submitted a letter to the journal for retraction</a>.
+The peer wrote,</p>
+<blockquote>
+<p>From the title to the conclusions of Pall's article are not based on adequate evidence.
+[...]
+At the usual exposure levels (<a href="https://doi.org/10.1038/jes.2017.13">Sagar et al., 2017</a>),
+it does not seem appropriate to
+think about any biological effects due to the low penetration of Wi-Fi
+waves, so the publication of this frightening article, can be misinterpreted
+by part of society concerned, even at pathological levels, by
+this type of technology. <strong>The errors, bias, a non-existing methodology,
+the interested choice of the articles, as well as the conclusions not based
+on human [sic] evidences, indicate that it is an intentional academic misconduct,
+so I ask for the retraction of this article by the journal.</strong></p>
+</blockquote>
+<p>There is debate among medical scientists about health impacts of WiFi.
+However,
+    the analysis in this blog post is clear-cut:
+    the energy density of electric fields due to WiFi routers is very small,
+    especially when compared to the energy density of sunlight.</p>
+<h1>Original article</h1>
+<p>This post started out as a fun calculation to compare the power output by microwave ovens and by WiFi routers.
 That's still what it is, but it is also a nice surface-level summary of the physics of antennas, sunlight, estimation, and the FCC.
 Well, not the physics of the FCC, but I did learn why we hire professionals to read the regulations.</p>
 <p><strong>The big takeaway is that, while it takes your microwave oven only about a minute to heat up a cup of coffee, it would take your WiFi router over ten thousand years to do the same!</strong></p>
@@ -106,7 +138,7 @@ Computing the same number from heat capacity, it would take about 700 J of energ
 Routers broadcast their energy using antennas rather than magnetrons like in microwave ovens.</p>
 <p><a href="https://www.ecfr.gov/current/title-47/section-15.209">Title 47, Chapter 1, Section 15.209</a> of the Code of Federal Regulations limits the electric field strength which may be radiated from a given non-broadcast antenna (or "<a href="https://www.ecfr.gov/current/title-47/part-15#p-15.3(o)">intentional radiator</a>" as they call it). For WiFi antennas the electric field strength may not exceed <span class="math">\(500\ \mu\mathrm{V}/\mathrm{m}\)</span> measured at a distance of 3 meters away. We need to jump through some hoops to convert that field strength into irradiance but it is straightforward if you know the right equations.</p>
 <p>There's a complication: the radiation pattern for a given antenna is not uniform. The most simple dipole antennas have a radiation pattern which is axially symmetric but varies along the other directions like a donut.</p>
-<p><img src="/wifi-microwaves-sunlight/static/images/dipole.jpg" alt="dipole radiation pattern"/></p>
+<p><img src="/wifi-microwaves-sunlight/static/images/dipole.jpg" alt="dipole radiation pattern" style="max-width: 90%"/></p>
 <p><em>Radiation pattern of a dipole antenna of length <span class="math">\(L = \lambda\)</span>, i.e. a single wavelength.
 WiFi antennas are generally more like <span class="math">\(L = \lambda / 10\)</span> in length so the radiation pattern is different.
 Credit: <a href="https://www.antenna-theory.com/antennas/dipole.php">antenna-theory.com</a></em></p>
